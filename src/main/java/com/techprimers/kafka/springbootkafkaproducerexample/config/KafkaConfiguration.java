@@ -17,7 +17,21 @@ import java.util.Map;
 public class KafkaConfiguration {
 
     @Bean
-    public ProducerFactory<String, User> producerFactory() {
+    public ProducerFactory<String, String> producerFactoryForString() {
+        Map<String, Object> config = new HashMap<>();
+        config.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, "127.0.0.1:9092");
+        config.put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, StringSerializer.class);
+        config.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, StringSerializer.class);
+        return new DefaultKafkaProducerFactory<>(config);
+    }
+
+    @Bean
+    public KafkaTemplate<String, String> kafkaTemplateForString() {
+        return new KafkaTemplate<>(producerFactoryForString());
+    }
+
+    @Bean
+    public ProducerFactory<String, User> producerFactoryForUser() {
         Map<String, Object> config = new HashMap<>();
         config.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, "127.0.0.1:9092");
         config.put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, StringSerializer.class);
@@ -26,8 +40,8 @@ public class KafkaConfiguration {
     }
 
     @Bean
-    public KafkaTemplate<String, User> kafkaUserTemplate() {
-        return new KafkaTemplate<>(producerFactory());
+    public KafkaTemplate<String, User> kafkaTemplateForUser() {
+        return new KafkaTemplate<>(producerFactoryForUser());
     }
 
 }

@@ -14,26 +14,25 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/kafka")
 public class UserResource {
 
-    /*@Autowired
-    KafkaTemplate<String, String> kafkaTemplate;*/
+    public static final String TOPIC = "mytest";
+    public static final String TOPIC_JSON = "mytest_json";
 
     @Autowired
-    KafkaTemplate<String, User> kafkaUserTemplate;
+    KafkaTemplate<String, String> kafkaTemplateForString;
+    @Autowired
+    KafkaTemplate<String, User> kafkaTemplateForUser;
 
-    public static final String TOPIC = "mytest";
 
-    /*@GetMapping("/publish/{message}")
-    public String postMessege(@PathVariable("message") final String message){
+    @GetMapping("/publishString/{message}")
+    public String postString(@PathVariable("message") final String message){
+        kafkaTemplateForString.send(TOPIC, message);
+        return "Published Successfully...on 11-02-2020";
+    }
 
-        kafkaTemplate.send(TOPIC, message);
-        return "Published Successfully N@ri";
-    }*/
-
-    @GetMapping("/publish/{email}")
+    @GetMapping("/publishUser/{email}")
     public String postUser(@PathVariable("email") final String email){
-
-        kafkaUserTemplate.send(TOPIC, new User("Nari", email));
-        return "Published Successfully N@ri";
+        kafkaTemplateForUser.send(TOPIC_JSON, new User("Nari", email));
+        return "User is Published Successfully on 11-02-2020";
     }
 
 }
